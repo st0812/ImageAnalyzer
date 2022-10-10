@@ -10,14 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-
+using System.Xml.Serialization;
 
 namespace ImageChecker.ViewModels
 {
-    class MainViewModel : NotificationObject
+    public class MainViewModel : NotificationObject
     {
 
         private DelegateCommand _newCommand;
+        [XmlIgnore]
         public DelegateCommand NewCommand
         {
             get
@@ -33,6 +34,8 @@ namespace ImageChecker.ViewModels
             }
         }
         private DelegateCommand _openFileCommand;
+        [XmlIgnore]
+
         public DelegateCommand OpenFileCommand
         {
             get
@@ -49,6 +52,7 @@ namespace ImageChecker.ViewModels
         }
 
         private Action<bool, string> _openDialogCallback;
+        [XmlIgnore]
 
         public Action<bool, string> OpenDialogCallback
         {
@@ -64,6 +68,8 @@ namespace ImageChecker.ViewModels
         }
 
         private DelegateCommand _saveFileCommand;
+        [XmlIgnore]
+
         public DelegateCommand SaveFileCommand
         {
             get
@@ -83,6 +89,8 @@ namespace ImageChecker.ViewModels
 
 
         private DelegateCommand _saveAsFileCommand;
+        [XmlIgnore]
+
         public DelegateCommand SaveAsFileCommand
         {
             get
@@ -99,6 +107,7 @@ namespace ImageChecker.ViewModels
         }
 
         private Action<bool, string> _saveAsDialogCallback;
+        [XmlIgnore]
 
         public Action<bool, string> SaveAsDialogCallback
         {
@@ -119,7 +128,8 @@ namespace ImageChecker.ViewModels
         private DelegateCommand _exitCommand;
 
 
-       
+        [XmlIgnore]
+
         public DelegateCommand ExitCommand
         {
             get
@@ -141,9 +151,9 @@ namespace ImageChecker.ViewModels
             return true;
         }
 
-
-
         private string _imageFilePath;
+        [XmlElement(ElementName = "ImageFilePath")]
+
         public string ImageFilePath
         {
             set
@@ -154,6 +164,8 @@ namespace ImageChecker.ViewModels
             get { return this._imageFilePath; }
         }
         private DelegateCommand _dropCommand;
+        [XmlIgnore]
+
         public DelegateCommand DropCommand
         {
             get
@@ -172,6 +184,8 @@ namespace ImageChecker.ViewModels
 
 
         private ClusteringSettingViewModel _clusteringSetting;
+        [XmlElement(ElementName = "ClusteringSetting")]
+
         public ClusteringSettingViewModel ClusteringSetting
         {
             get => _clusteringSetting;
@@ -211,6 +225,7 @@ namespace ImageChecker.ViewModels
         }
 
         private DelegateCommand _analyzeCommand;
+        [XmlIgnore]
 
         public DelegateCommand AnalyzeCommand
         {
@@ -233,6 +248,8 @@ namespace ImageChecker.ViewModels
         }
 
         private List<HSVFeature> _pallets;
+        [XmlIgnore]
+
         public List<HSVFeature> Pallets
         {
 
@@ -250,6 +267,8 @@ namespace ImageChecker.ViewModels
         }
        
         private BitmapSource _dstBitmapSource;
+        [XmlIgnore]
+
         public BitmapSource DstBitmapSource
         {
             get
@@ -263,6 +282,8 @@ namespace ImageChecker.ViewModels
             }
         }
         private Bitmap _dstBitmap;
+        [XmlIgnore]
+
         public Bitmap DstBitmap
         {
             get
@@ -289,6 +310,8 @@ namespace ImageChecker.ViewModels
         }
 
         private DelegateCommand _saveCommand;
+        [XmlIgnore]
+
         public DelegateCommand SaveCommand
         {
             get
@@ -312,6 +335,8 @@ namespace ImageChecker.ViewModels
        
 
         private Action<bool, string> _saveImageDialogCallback;
+        [XmlIgnore]
+
 
         public Action<bool, string> SaveImageDialogCallback
         {
@@ -344,21 +369,23 @@ namespace ImageChecker.ViewModels
         private void OpenSettingFile(string filepath)
         {
             InitializeSettings();
-            var settings = XDocument.Load(filepath).Descendants("Settings").First();
-            var ImageFilePathAttribute = settings.Attribute("TargetImageFilePath");
-            if (ImageFilePathAttribute != null) ImageFilePath = ImageFilePathAttribute.Value;
-
-            ClusteringSetting.LoadSetting(settings);
             _filepath = filepath;
+
+            var sel = new XmlSerializer(typeof(MainViewModel));
+
+            var fileStream = new FileStream(_filepath, FileMode.Open);
+            var vm = (MainViewModel)sel.Deserialize(fileStream);
+            ImageFilePath = vm.ImageFilePath;
+            ClusteringSetting = vm.ClusteringSetting;
         }
 
         private string _filepath;
         private void SaveSetttingsToFile()
         {
-
-            var xdoc = ClusteringSetting.ToElement();
-            if (ImageFilePath != null) xdoc.Element("Settings").Add(new XAttribute("TargetImageFilePath", ImageFilePath));
-            xdoc.Save(_filepath);
+            StreamWriter writer = new StreamWriter(_filepath);
+            var sel = new XmlSerializer(typeof(MainViewModel));
+            sel.Serialize(writer,this);
+            writer.Close();
 
 
         }

@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace ImageChecker
 {
-    class DelegateCommand:ICommand
+    public class DelegateCommand:ICommand
     {
         private Action<object> _execute;
         private Func<object, bool> _canExecute;

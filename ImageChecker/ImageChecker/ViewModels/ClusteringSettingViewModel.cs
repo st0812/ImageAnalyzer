@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace ImageChecker.ViewModels
 {
-    class ClusteringSettingViewModel:NotificationObject
+    public class ClusteringSettingViewModel:NotificationObject
     {
         private int _clusterNum;
+        [XmlElement(ElementName="NumberOfClusters")]
         public int ClusterNum
         {
             get
@@ -23,6 +25,8 @@ namespace ImageChecker.ViewModels
             }
         }
         private int _loopUpperLimit;
+        [XmlElement(ElementName = "LoopUpperLimit")]
+
         public int LoopUpperLimit
         {
             get
@@ -35,6 +39,8 @@ namespace ImageChecker.ViewModels
             }
         }
         private int _seed;
+        [XmlElement(ElementName = "Seed")]
+
         public int Seed
         {
             get
@@ -47,6 +53,7 @@ namespace ImageChecker.ViewModels
             }
         }
         private HSVFilterSettingViewModel _HSVSetting;
+        [XmlElement(ElementName ="HSVSettings")]
         public HSVFilterSettingViewModel HSVSetting
         {
             get => _HSVSetting;

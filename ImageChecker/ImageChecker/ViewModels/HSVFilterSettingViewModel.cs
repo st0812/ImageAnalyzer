@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ImageChecker.ViewModels
 {
     public class HSVFilterSettingViewModel:NotificationObject
     {
         private double _hueStart;
+        [XmlElement(ElementName = "HueStart")]
+
         public double HueStart
         {
             get
@@ -23,6 +26,8 @@ namespace ImageChecker.ViewModels
         }
 
         private double _hueEnd;
+        [XmlElement(ElementName = "HueEnd")]
+
         public double HueEnd
         {
             get
@@ -38,6 +43,8 @@ namespace ImageChecker.ViewModels
 
        
         private double _saturationStart;
+        [XmlElement(ElementName = "SaturationStart")]
+
         public double SaturationStart
         {
             get
@@ -52,6 +59,8 @@ namespace ImageChecker.ViewModels
         }
 
         private double _saturationEnd;
+        [XmlElement(ElementName = "SaturationEnd")]
+
         public double SaturationEnd
         {
             get
@@ -67,6 +76,8 @@ namespace ImageChecker.ViewModels
         }
 
         private double _valueStart;
+        [XmlElement(ElementName = "ValueStart")]
+
         public double ValueStart
         {
             get
@@ -80,6 +91,8 @@ namespace ImageChecker.ViewModels
         }
 
         private double _valueEnd;
+        [XmlElement(ElementName = "ValueEnd")]
+
         public double ValueEnd
         {
             get
