@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageChecker.Models
+namespace Clustering
 {
     public static class FeatureExtension
     {
-        public static T Average<T>(this IEnumerable<T> source) where T : IFeature<T>
+        public static T Average<T>(this IEnumerable<T> source) where T : IFeatureVector<T>
         {
             T feature = source.FirstOrDefault();
             foreach (var f in source.Skip(1))

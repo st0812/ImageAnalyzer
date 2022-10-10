@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clustering;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace ImageChecker.Models
 
     }
 
-    public class HSVFeature : IFeature<HSVFeature>, IEquatable<HSVFeature>
+    public class HSVFeature : IFeatureVector<HSVFeature>, IEquatable<HSVFeature>
     {
         public Phase H { get; }
         public float S { get; }

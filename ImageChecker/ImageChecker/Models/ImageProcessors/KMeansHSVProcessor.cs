@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Clustering;
+using Clustering.Algorithms;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -27,12 +29,12 @@ namespace ImageChecker.Models
             var features = src.Flatten().Select(pixel => HSVFeature.RGBtoHSV(pixel)).ToList();
             var learningFeatures = features.Where(feature => Filters.IsPassed(feature)).ToList();
 
-            var kmean = KMeans<HSVFeature>.CreateKMeansState(learningFeatures, NumberOfClusters, Seed);
-            var process = new ClusteringProcess<KMeans<HSVFeature>, HSVFeature>(NumberOfLoops, kmean);
+            var kmean = KMeansState<HSVFeature>.CreateKMeansInitialState(learningFeatures, NumberOfClusters, Seed);
+            var process = new ClusteringProcess<KMeansState<HSVFeature>, HSVFeature>(NumberOfLoops, kmean);
             var result = process.Learn();
 
-            var dstFeatures = features.Select(feature => Filters.IsPassed(feature) ? result.Fit(feature) : new HSVFeature(new Phase(0),0,0)).Select(feature => feature.Color);
-            var colors = (result as KMeans<HSVFeature>).CenterFeatures.Select(feature => feature.Color);
+            var dstFeatures = features.Select(feature => Filters.IsPassed(feature) ? result.CalculateNearestCenterVector(feature) : new HSVFeature(new Phase(0),0,0)).Select(feature => feature.Color);
+            var colors = (result as KMeansState<HSVFeature>).CenterFeatures.Select(feature => feature.Color);
             return (FeatureExtension.Reshape(dstFeatures, src.Width, src.Height), colors);
         }
     }

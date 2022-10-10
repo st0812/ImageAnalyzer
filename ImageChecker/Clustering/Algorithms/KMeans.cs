@@ -2,23 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageChecker.Models
+namespace Clustering.Algorithms
 {
-    public class KMeans<T> : IClustering<KMeans<T>, T> where T : IFeature<T>
+    public class KMeansState<T> : IClusteringState<KMeansState<T>, T> where T : IFeatureVector<T>
     {
         public IEnumerable<T> CenterFeatures { get; }
         private IEnumerable<T> Features { get; }
-        public KMeans(IEnumerable<T> features, IEnumerable<T> centerFeatures)
+        public KMeansState(IEnumerable<T> features, IEnumerable<T> centerFeatures)
         {
             CenterFeatures = centerFeatures;
             Features = features;
         }
 
-        public KMeans<T> Next()
+        public KMeansState<T> GenerateNextState()
         {
             var dic = new Dictionary<T, List<T>>();
             foreach (var center in CenterFeatures)
@@ -34,25 +33,25 @@ namespace ImageChecker.Models
 
             var newCenters = dic.Values.Select(fs => fs.Average<T>());
 
-            return new KMeans<T>(Features, newCenters.ToList());
+            return new KMeansState<T>(Features, newCenters.ToList());
         }
 
-        public T Fit(T src)
+        public T CalculateNearestCenterVector(T src)
         {
             return CenterFeatures.MinBy(k => src.Distance(k)).First();
         }
 
-        public static KMeans<T> CreateKMeansState(IEnumerable<T> features, int numberOfClusters, int seed)
+        public bool IsConverged(KMeansState<T> other)
+        {
+            return CenterFeatures.All(feature => other.CenterFeatures.Contains(feature));
+        }
+
+        public static KMeansState<T> CreateKMeansInitialState(IEnumerable<T> features, int numberOfClusters, int seed)
         {
             var rand = new Random(seed);
             var centers = features.OrderBy(v => rand.Next()).Take(numberOfClusters);
-            var cluster = new KMeans<T>(features, centers.ToList());
+            var cluster = new KMeansState<T>(features, centers.ToList());
             return cluster;
-        }
-
-        public bool IsConverged(KMeans<T> other)
-        {
-            return CenterFeatures.All(feature => other.CenterFeatures.Contains(feature));
         }
     }
 }

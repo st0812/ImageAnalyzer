@@ -72,15 +72,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="Models\ClusteringProcess.cs" />
-    <Compile Include="Models\HSV\FeatureExtension.cs" />
-    <Compile Include="Models\HSV\HSVFeature.cs" />
-    <Compile Include="Models\HSV\HSVFilter.cs" />
-    <Compile Include="Models\IFeature.cs" />
+    <Compile Include="Models\Features\HSV\HSVFeature.cs" />
+    <Compile Include="Models\Features\HSV\HSVFilter.cs" />
     <Compile Include="Models\IImageProcessor.cs" />
-    <Compile Include="Models\Algorithm\KMeans.cs" />
-    <Compile Include="Models\KMeansHSVProcessor.cs" />
-    <Compile Include="Models\FeatureFilter.cs" />
+    <Compile Include="Models\ImageProcessors\KMeansHSVProcessor.cs" />
+    <Compile Include="Models\IFeatureFilter.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="ViewModels\ClusteringSettingViewModel.cs" />
     <Compile Include="ViewModels\HSVFilterSettingViewModel.cs" />
@@ -120,6 +116,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Clustering\Clustering.csproj">
+      <Project>{b160a9cb-dac5-4040-9f9d-bde308b2c9c7}</Project>
+      <Name>Clustering</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
